@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -160,6 +161,7 @@ namespace MyProductsRegister.Controllers
           return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
+        [Authorize]
         public async Task<IActionResult> SeeManufacturer()
         {
             return View( await _context.Manufacturer.Include(m => m.Products).ToListAsync() );
