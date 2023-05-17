@@ -20,6 +20,8 @@ namespace MyProductsRegister
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
+            //Sätter in LösenordStrength Inställningar här
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
