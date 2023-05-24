@@ -24,7 +24,7 @@ namespace MyProductsRegister.Controllers
         // GET: Manufacturers
         public async Task<IActionResult> Index()
         {
-              return _context.Manufacturer != null ? 
+            return _context.Manufacturer != null ? 
                           View(await _context.Manufacturer.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.Manufacturer'  is null.");
         }
@@ -48,7 +48,7 @@ namespace MyProductsRegister.Controllers
         }
 
         // GET: Manufacturers/Create
-        [Authorize(Roles ="mod")]
+        [Authorize(Roles ="Admin")]
         public IActionResult Create()
         {
             return View();
