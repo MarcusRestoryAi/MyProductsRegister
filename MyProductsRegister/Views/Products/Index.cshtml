@@ -14,6 +14,15 @@
     <p>
         <a asp-action="SeeManufacturer" class="btn btn-primary">Visa tillverkare av produkter</a>
     </p>
+
+    <!-- Skapa textfält och knapp för öskning av produkter -->
+    <p>Sök efter en eller flera produkter enbara i produkt tabellen. I vyn att se produkter av alla tillverkare kan du söka bland både produkter och tillverkare.</p>
+    <form asp-action="Index" asp-route-search="search">
+        <label class="control-label" name="search">Search: </label>
+        <input class="form-control" type="text" name="search" />
+        <input type="submit" value="search" class="btn btn-success" />
+    </form>
+
 }
 <table class="table">
     <thead>

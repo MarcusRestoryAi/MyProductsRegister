@@ -5,6 +5,15 @@
 }
 @model IEnumerable<MyProductsRegister.Models.Manufacturer>
 
+<h2>Search bland alla poster</h2>
+<p>Sök bland samtliga poster i både Produkter och Tillverkare</p>
+<!-- Skapa textfält och knapp för öskning av produkter -->
+<form asp-action="ProductSearch" asp-route-search="search">
+    <label class="control-label" name="search">Search: </label>
+    <input class="form-control" type="text" name="search" />
+    <input type="submit" value="search" class="btn btn-success" />
+</form>
+
 <h1>Se tillverkare av produkter</h1>
 @foreach (var manufacturer in Model) {
     <h2>@Html.DisplayFor(model => manufacturer.Name)</h2>

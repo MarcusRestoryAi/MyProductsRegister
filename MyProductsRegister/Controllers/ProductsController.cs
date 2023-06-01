@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using MyProductsRegister.Data;
 using MyProductsRegister.Models;
@@ -26,6 +27,16 @@ namespace MyProductsRegister.Controllers
               return _context.Products != null ? 
                           View(await _context.Products.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.Products'  is null.");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(string search)
+        {
+            search = Request.Form["search"].ToString();
+
+            if (search != null) return View(await _context.Products.Where(m => m.Name.Contains(search)).ToListAsync());
+            else                return View(await _context.Products.ToListAsync());
         }
 
         // GET: Products/Details/5
@@ -165,6 +176,43 @@ namespace MyProductsRegister.Controllers
         public async Task<IActionResult> SeeManufacturer()
         {
             return View( await _context.Manufacturer.Include(m => m.Products).ToListAsync() );
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SeeManufacturer(string search)
+        {
+            return View(await _context.Manufacturer.Where(n => n.Name == search).Include(m => m.Products).ToListAsync());
+        }
+
+        public async Task<Products> FetchProductByName(string name)
+        {
+            //Hämta specifik produkt from DB efter namnet
+            Products product = await _context.Products.Where(m => m.Name == name).FirstOrDefaultAsync();
+
+            return product;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProductSearch()
+        {
+            string search = Request.Form["search"].ToString();
+
+            //Om search är tom, returnera till Index
+            if (search == null) return RedirectToAction("/Index");
+
+            var products = await _context.Products.Where(m => m.Name.Contains(search)).ToListAsync();
+            var manufacturer = await _context.Manufacturer.Where(m => m.Name.Contains(search)).ToListAsync();
+
+            var manufacturerProducts = new ManufacturerProducts()
+            {
+                Products = products,
+                Manufacturer = manufacturer
+            };
+
+            return View(manufacturerProducts);
         }
     }
 }
